@@ -39,6 +39,6 @@ Per ogni contenuto analizzato: valutazione SEO (keyword, titolo), valutazione AE
 Quando viene rilasciata una nuova versione del plugin, esegui:
 ```
 /plugin marketplace update power-wp-audit-marketplace
-/plugin update power-wp-audit
+/plugin update power-wp-audit@power-wp-audit-marketplace
 ```
-poi riavvia la sessione di Claude Code — non serve reinstallare nulla.
+poi riavvia la sessione di Claude Code — non serve reinstallare nulla. Se questi comandi non sono disponibili nell'ambiente in uso, l'equivalente da terminale è `claude plugin marketplace update power-wp-audit-marketplace` seguito da `claude plugin update power-wp-audit@power-wp-audit-marketplace`.

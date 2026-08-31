@@ -29,9 +29,15 @@ Per farsi spiegare cosa fa il plugin e come si usa, basta chiedere in linguaggio
 Quando viene pubblicata una nuova versione, aggiorna il catalogo e il plugin con:
 ```
 /plugin marketplace update power-wp-audit-marketplace
-/plugin update power-wp-audit
+/plugin update power-wp-audit@power-wp-audit-marketplace
 ```
 Poi riavvia la sessione di Claude Code per applicare l'aggiornamento.
+
+Se questi comandi risultano non disponibili nel tuo ambiente (es. alcune integrazioni non supportano la gestione plugin interattiva), usa l'equivalente da terminale, fuori da una sessione Claude Code:
+```
+claude plugin marketplace update power-wp-audit-marketplace
+claude plugin update power-wp-audit@power-wp-audit-marketplace
+```
 
 ## Struttura
 
