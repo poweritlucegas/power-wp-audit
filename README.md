@@ -8,7 +8,7 @@ Plugin Claude Code per analizzare i contenuti pubblicati su **poweritlucegas.it*
 
 Dentro Claude Code:
 ```
-/plugin marketplace add <org>/power-wp-audit
+/plugin marketplace add poweritlucegas/power-wp-audit
 /plugin install power-wp-audit@power-wp-audit-marketplace
 ```
 
