@@ -26,10 +26,12 @@ Per farsi spiegare cosa fa il plugin e come si usa, basta chiedere in linguaggio
 
 ## Restare aggiornati
 
-Gli aggiornamenti vengono rilevati automaticamente quando viene pubblicata una nuova versione. Quando Claude Code segnala un aggiornamento disponibile, eseguire:
+Quando viene pubblicata una nuova versione, aggiorna il catalogo e il plugin con:
 ```
-/reload-plugins
+/plugin marketplace update power-wp-audit-marketplace
+/plugin update power-wp-audit
 ```
+Poi riavvia la sessione di Claude Code per applicare l'aggiornamento.
 
 ## Struttura
 

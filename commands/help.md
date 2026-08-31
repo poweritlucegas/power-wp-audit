@@ -36,4 +36,9 @@ Per ogni contenuto analizzato: valutazione SEO (keyword, titolo), valutazione AE
 
 ## Aggiornamenti
 
-Quando viene rilasciata una nuova versione del plugin, Claude Code lo segnala automaticamente; basta eseguire `/reload-plugins` per applicarla — non serve reinstallare nulla.
+Quando viene rilasciata una nuova versione del plugin, esegui:
+```
+/plugin marketplace update power-wp-audit-marketplace
+/plugin update power-wp-audit
+```
+poi riavvia la sessione di Claude Code — non serve reinstallare nulla.
