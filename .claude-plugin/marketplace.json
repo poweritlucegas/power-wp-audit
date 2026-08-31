@@ -1,0 +1,15 @@
+{
+  "name": "power-wp-audit-marketplace",
+  "owner": {
+    "name": "William Locatelli",
+    "email": "william.locatelli@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "power-wp-audit",
+      "source": "./",
+      "description": "Analisi SEO/AEO dei contenuti pubblicati su poweritlucegas.it (FAQ e articoli) — sola lettura, nessuna credenziale richiesta.",
+      "version": "1.0.0"
+    }
+  ]
+}
