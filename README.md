@@ -17,10 +17,12 @@ Nessuna configurazione necessaria: l'URL del sito è già incorporato nello stru
 ## Uso
 
 ```
-/power-wp-audit:audit faq
-/power-wp-audit:audit posts
-/power-wp-audit:audit posts bolletta
+/audit-powerit faq
+/audit-powerit posts
+/audit-powerit posts bolletta
 ```
+
+Per farsi spiegare cosa fa il plugin e come si usa, basta chiedere in linguaggio naturale ("cosa fa questo plugin?", "come si usa?") oppure eseguire `/help`.
 
 ## Restare aggiornati
 
@@ -36,8 +38,10 @@ power-wp-audit/
 ├── .claude-plugin/
 │   ├── plugin.json          # manifest del plugin
 │   └── marketplace.json     # catalogo per /plugin marketplace add
+├── commands/
+│   └── help.md              # spiegazione plugin, si attiva anche in linguaggio naturale
 ├── skills/
-│   └── audit/
+│   └── audit-powerit/
 │       ├── SKILL.md
 │       └── scripts/
 │           └── fetch-content.js

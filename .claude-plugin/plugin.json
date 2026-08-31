@@ -1,7 +1,7 @@
 {
   "name": "power-wp-audit",
   "displayName": "Power WordPress Content Audit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Analisi SEO/AEO dei contenuti pubblicati su poweritlucegas.it (FAQ e articoli) via API REST pubblica di WordPress — sola lettura, nessuna credenziale richiesta.",
   "author": {
     "name": "William Locatelli",

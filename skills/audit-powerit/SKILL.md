@@ -1,6 +1,6 @@
 ---
-name: audit
-description: Recupera e analizza i contenuti pubblicati su poweritlucegas.it (FAQ e articoli) via API REST pubblica di WordPress — qualità SEO, struttura, citabilità AI (AEO). Sola lettura: nessuna credenziale richiesta, nessuna modifica al sito. Attivare con "/power-wp-audit:audit [tipo]", "analizza le FAQ del sito", "controlla i contenuti di tipo X", "suggerisci keyword per le pagine", "revisione contenuti WordPress".
+name: audit-powerit
+description: Recupera e analizza i contenuti pubblicati su poweritlucegas.it (FAQ e articoli) via API REST pubblica di WordPress — qualità SEO, struttura, citabilità AI (AEO). Sola lettura: nessuna credenziale richiesta, nessuna modifica al sito. Attivare con "/power-wp-audit:audit-powerit [tipo]", "analizza le FAQ del sito", "controlla i contenuti di tipo X", "suggerisci keyword per le pagine", "revisione contenuti WordPress".
 when_to_use: analizza contenuti sito, revisione FAQ, suggerisci keyword, audit pagine WordPress, ottimizza per AI citation, controllo qualità contenuti, link building interno
 allowed-tools: Bash(node:*), WebFetch
 ---
@@ -16,7 +16,7 @@ Questa skill non richiede e non usa mai alcuna credenziale WordPress: il sito es
 ## When to use
 
 Attivare quando l'utente:
-- Scrive `/power-wp-audit:audit [tipo]` con un tipo di contenuto (`faq`, `posts`, `pages`)
+- Scrive `/power-wp-audit:audit-powerit [tipo]` (o la forma breve `/audit-powerit [tipo]`) con un tipo di contenuto (`faq`, `posts`, `pages`)
 - Vuole "analizzare le FAQ", "revisionare gli articoli", "controllare la qualità dei contenuti"
 - Vuole keyword suggerite partendo dal contenuto esistente
 - Vuole ottimizzare contenuti per le citazioni nei motori AI (AI Overviews, Perplexity, ChatGPT)
@@ -70,13 +70,13 @@ Per ciascun elemento valutare:
 
 ### Esempio 1 — Audit FAQ
 ```
-/power-wp-audit:audit faq
+/audit-powerit faq
 ```
 Recupera tutte le FAQ pubblicate (con paginazione automatica), le analizza, propone un report prioritizzato.
 
 ### Esempio 2 — Audit articoli con filtro
 ```
-/power-wp-audit:audit posts bolletta
+/audit-powerit posts bolletta
 ```
 Recupera gli articoli che contengono "bolletta" nel titolo/contenuto e ne analizza la qualità SEO/AEO.
 
