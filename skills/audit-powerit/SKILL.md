@@ -40,7 +40,8 @@ Non attivare se l'utente vuole pubblicare/modificare contenuti sul sito — ques
 
 ### Fase 1 — Recupero contenuti
 
-1. Eseguire `node ${CLAUDE_PLUGIN_ROOT}/scripts/fetch-content.js <tipo> [query]`. Lo script gestisce da solo la paginazione (recupera SEMPRE tutti gli elementi pubblicati) e una cache locale di 10 minuti (usa `--no-cache` se serve un dato certamente fresco, es. subito dopo una pubblicazione). Stampa un array JSON su stdout.
+1. Eseguire **sempre ed esclusivamente** `node ${CLAUDE_PLUGIN_ROOT}/scripts/fetch-content.js <tipo> [query]` per recuperare i contenuti. Lo script gestisce da solo la paginazione (recupera SEMPRE tutti gli elementi pubblicati) e una cache locale di 10 minuti (usa `--no-cache` se serve un dato certamente fresco, es. subito dopo una pubblicazione). Stampa un array JSON su stdout.
+   - **Non usare mai WebFetch (né curl/altre chiamate dirette) per recuperare i contenuti principali** — nemmeno per richieste come "ultimi N articoli" o "articoli su un argomento": recuperare comunque TUTTO con lo script e poi filtrare/ordinare/tagliare in questa fase di analisi. WebFetch passa da un'infrastruttura cloud condivisa che il sito può riconoscere come traffico automatizzato e bloccare con una challenge anti-bot (comportamento osservato), mentre lo script gira in locale e non ha questo problema. WebFetch va usato solo per la sitemap in Fase 2, mai per i contenuti.
 2. Se non specificato dall'utente, chiedere quale tipo di contenuto analizzare (`faq`, `posts`, `pages`).
 3. Per le FAQ, il testo della risposta arriva già estratto in `contenuto_testo` (dal campo ACF `risposta_faq`).
 4. Ogni elemento include già, senza chiamate aggiuntive: `meta_title`, `meta_description` (i meta tag SEO reali), `schema_types` (elenco dei tipi `@type` presenti nello schema JSON-LD del sito), e per le FAQ `schema_faq_question_count` (quante domande sono effettivamente popolate nello schema FAQPage).
@@ -126,3 +127,4 @@ Recupera gli articoli che contengono "bolletta" e ne analizza la qualità SEO/sc
 - **Rate limiting**: lo script inserisce già una pausa tra le pagine; evitare comunque lanci ripetuti ravvicinati sullo stesso tipo di contenuto.
 - **404 su un tipo di contenuto**: il custom post type potrebbe non avere `show_in_rest` attivo. Verificare su `https://poweritlucegas.it/wp-json/wp/v2/types`.
 - **Nessuna pubblicazione possibile**: se l'utente chiede di applicare le modifiche proposte, spiegare che questa skill è di sola analisi e che la pubblicazione è riservata al proprietario del sito.
+- **"Failed to fetch" / challenge anti-bot su un URL costruito manualmente**: sintomo di aver usato WebFetch (o un fetch diretto) invece dello script — vedi Fase 1. Lo script `fetch-content.js` non ha questo problema perché gira in locale via `node`, non dall'infrastruttura cloud di WebFetch.
