@@ -1,8 +1,10 @@
 # power-wp-audit
 
-Plugin Claude Code per analizzare i contenuti pubblicati su **poweritlucegas.it** (FAQ e articoli) via API REST pubblica di WordPress.
+Plugin Claude Code per analizzare i contenuti pubblicati su **poweritlucegas.it** (FAQ e articoli) su tre assi — **SEO** (posizionamento), **AEO** (risposta diretta/featured snippet, incluse le AI Overviews di Google) e **GEO** (citazioni nei motori generativi come ChatGPT/Perplexity) — via API REST pubblica di WordPress. Controlla anche schema markup, meta tag e freschezza dei contenuti.
 
 **Sola lettura**: non richiede alcuna credenziale WordPress e non può in alcun modo modificare o pubblicare contenuti sul sito. La pubblicazione resta uno strumento separato, riservato al proprietario del sito.
+
+**Fuori scope**: Core Web Vitals, velocità di caricamento e crawlability tecnica del sito non sono coperti da questo plugin (competenza di uno strumento separato) — qui l'attenzione è sulla qualità/struttura/citabilità dei contenuti.
 
 ## Installazione (una tantum)
 

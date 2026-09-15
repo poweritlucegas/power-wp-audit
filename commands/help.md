@@ -8,7 +8,7 @@ Rispondi all'utente spiegando in modo chiaro e discorsivo (non solo un elenco se
 
 ## Cosa fa questo plugin
 
-**power-wp-audit** analizza i contenuti pubblicati su **poweritlucegas.it** (FAQ e articoli/post) per qualità SEO e leggibilità da parte dei motori di risposta AI (AEO — AI Overviews, Perplexity, ChatGPT). Recupera i contenuti via API REST pubblica di WordPress e propone un report con problemi rilevati e azioni suggerite (keyword, struttura, lunghezza, link interni).
+**power-wp-audit** analizza i contenuti pubblicati su **poweritlucegas.it** (FAQ e articoli/post) su tre assi distinti: **SEO** (farsi trovare e posizionare), **AEO** (farsi estrarre come risposta diretta — featured snippet, AI Overviews di Google incluse) e **GEO** (farsi citare come fonte dai motori generativi come ChatGPT o Perplexity). Controlla anche schema markup (dati strutturati JSON-LD), meta title/description, e la freschezza dei contenuti. Recupera i contenuti via API REST pubblica di WordPress e propone un report con problemi rilevati e azioni suggerite, etichettate per asse.
 
 ## Cosa NON fa (importante)
 
@@ -32,7 +32,9 @@ Non serve alcuna configurazione: nessuna password, nessun URL da inserire, funzi
 
 ## Cosa restituisce l'audit
 
-Per ogni contenuto analizzato: valutazione SEO (keyword, titolo), valutazione AEO (risposta diretta, dati citabili), qualità/lunghezza del contenuto, ed eventuali suggerimenti di link interno verso altre pagine/FAQ del sito. Il risultato finale è una tabella prioritizzata (alta/media/bassa priorità) presentata direttamente in chat.
+Per ogni contenuto analizzato: valutazione SEO (keyword, titolo, meta tag), schema markup (dati strutturati presenti/mancanti/incompleti), valutazione AEO (risposta diretta, dati citabili), valutazione GEO (citazioni, statistiche, consistenza del brand), qualità/lunghezza/freschezza del contenuto, ed eventuali suggerimenti di link interno verso altre pagine/FAQ del sito. Include anche una nota (una sola volta per report, non per contenuto) sullo stato del file `llms.txt` del sito, trattata come informazione a bassa priorità. Il risultato finale è una tabella prioritizzata (alta/media/bassa priorità) presentata direttamente in chat, con ogni problema etichettato per asse (SEO/AEO/GEO).
+
+**Cosa NON copre**: velocità del sito, Core Web Vitals, aspetti tecnici infrastrutturali — coperti da un altro strumento dedicato, non da questo plugin.
 
 ## Aggiornamenti
 

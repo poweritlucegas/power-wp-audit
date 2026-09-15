@@ -8,8 +8,8 @@
     {
       "name": "power-wp-audit",
       "source": "./",
-      "description": "Analisi SEO/AEO dei contenuti pubblicati su poweritlucegas.it (FAQ e articoli) — sola lettura, nessuna credenziale richiesta.",
-      "version": "1.1.1"
+      "description": "Analisi SEO/AEO/GEO dei contenuti pubblicati su poweritlucegas.it (FAQ e articoli) — schema markup, meta tag, citabilità AI — sola lettura, nessuna credenziale richiesta.",
+      "version": "1.2.0"
     }
   ]
 }

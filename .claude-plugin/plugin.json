@@ -1,8 +1,8 @@
 {
   "name": "power-wp-audit",
   "displayName": "Power WordPress Content Audit",
-  "version": "1.1.1",
-  "description": "Analisi SEO/AEO dei contenuti pubblicati su poweritlucegas.it (FAQ e articoli) via API REST pubblica di WordPress — sola lettura, nessuna credenziale richiesta.",
+  "version": "1.2.0",
+  "description": "Analisi SEO/AEO/GEO dei contenuti pubblicati su poweritlucegas.it (FAQ e articoli) — schema markup, meta tag, citabilità AI — via API REST pubblica di WordPress, sola lettura, nessuna credenziale richiesta.",
   "author": {
     "name": "William Locatelli",
     "email": "william.locatelli@gmail.com"

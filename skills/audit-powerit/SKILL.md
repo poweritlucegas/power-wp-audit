@@ -1,7 +1,7 @@
 ---
 name: audit-powerit
-description: Recupera e analizza i contenuti pubblicati su poweritlucegas.it (FAQ e articoli) via API REST pubblica di WordPress — qualità SEO, struttura, citabilità AI (AEO). Sola lettura: nessuna credenziale richiesta, nessuna modifica al sito. Attivare con "/power-wp-audit:audit-powerit [tipo]", "analizza le FAQ del sito", "controlla i contenuti di tipo X", "suggerisci keyword per le pagine", "revisione contenuti WordPress".
-when_to_use: analizza contenuti sito, revisione FAQ, suggerisci keyword, audit pagine WordPress, ottimizza per AI citation, controllo qualità contenuti, link building interno
+description: Recupera e analizza i contenuti pubblicati su poweritlucegas.it (FAQ e articoli) via API REST pubblica di WordPress — SEO, schema markup, meta tag, citabilità per i motori di risposta (AEO) e per i motori generativi (GEO), incluse le AI Overviews di Google (AIO). Sola lettura: nessuna credenziale richiesta, nessuna modifica al sito. Attivare con "/power-wp-audit:audit-powerit [tipo]", "analizza le FAQ del sito", "controlla lo schema markup", "controlla i meta tag", "controlla i contenuti di tipo X", "suggerisci keyword per le pagine", "revisione contenuti WordPress".
+when_to_use: analizza contenuti sito, revisione FAQ, suggerisci keyword, audit pagine WordPress, ottimizza per AI citation, controllo qualità contenuti, controllo schema markup, controllo meta title meta description, verifica llms.txt, ottimizzazione AI Overviews, GEO, AEO, AIO, topic cluster, link building interno
 allowed-tools: Bash(node:*), WebFetch
 ---
 
@@ -13,29 +13,42 @@ Skill di **sola lettura** per analizzare i contenuti pubblicati su poweritlucega
 
 Questa skill non richiede e non usa mai alcuna credenziale WordPress: il sito espone pubblicamente in lettura i contenuti già pubblicati (verificato — `status=publish`; bozze e contenuti privati restano invisibili). Non esiste, in questo plugin, alcuna capacità di scrivere o pubblicare sul sito: la pubblicazione è gestita da uno strumento separato, riservato al proprietario del sito. Questa skill non può in alcun modo modificare poweritlucegas.it.
 
+## Terminologia — non sono sinonimi
+
+- **SEO**: farsi trovare e posizionare nei motori di ricerca tradizionali (KPI: posizionamento, traffico organico).
+- **AEO (Answer Engine Optimization)**: farsi estrarre come risposta diretta da un motore di risposta qualunque — Perplexity, ricerca vocale, featured snippet (KPI: featured snippet ottenuti, copertura domande).
+- **GEO (Generative Engine Optimization)**: farsi citare/raccomandare dai motori generativi (ChatGPT, Gemini, Perplexity) come fonte (KPI: citazioni e sentiment nelle risposte AI). È per l'80% disciplina strategica/di brand e per il 20% tecnica — qui copriamo la parte tecnica verificabile dal contenuto.
+- **AIO**: le AI Overviews di Google nello specifico — un'implementazione particolare di AEO/GEO su Google, non un sinonimo generico dei due.
+
+Il report finale (Fase 4) deve etichettare ogni finding con l'asse di appartenenza (SEO / AEO / GEO), non un bucket unico.
+
 ## When to use
 
 Attivare quando l'utente:
 - Scrive `/power-wp-audit:audit-powerit [tipo]` (o la forma breve `/audit-powerit [tipo]`) con un tipo di contenuto (`faq`, `posts`, `pages`)
 - Vuole "analizzare le FAQ", "revisionare gli articoli", "controllare la qualità dei contenuti"
 - Vuole keyword suggerite partendo dal contenuto esistente
-- Vuole ottimizzare contenuti per le citazioni nei motori AI (AI Overviews, Perplexity, ChatGPT)
-- Vuole suggerimenti di link building interno
+- Vuole controllare schema markup, meta title/description
+- Vuole ottimizzare contenuti per le citazioni nei motori AI (AI Overviews, Perplexity, ChatGPT) o per GEO/AEO
+- Vuole suggerimenti di link building interno o di architettura a topic cluster
 
 Non attivare se l'utente vuole pubblicare/modificare contenuti sul sito — questa capacità non è disponibile qui; indirizzarlo al proprietario del sito.
+
+**Fuori scope (deliberatamente)**: Core Web Vitals, velocità di caricamento, crawlability tecnica del sito — sono coperti da un'altra skill dedicata (`wl-check`). Questa skill resta focalizzata su qualità/struttura/citabilità dei contenuti, non su infrastruttura/performance tecnica del sito.
 
 ## Instructions
 
 ### Fase 1 — Recupero contenuti
 
-1. Eseguire `node ${CLAUDE_PLUGIN_ROOT}/scripts/fetch-content.js <tipo> [query]`. Lo script gestisce da solo la paginazione (recupera SEMPRE tutti gli elementi pubblicati, non solo i primi) e stampa un array JSON su stdout.
+1. Eseguire `node ${CLAUDE_PLUGIN_ROOT}/scripts/fetch-content.js <tipo> [query]`. Lo script gestisce da solo la paginazione (recupera SEMPRE tutti gli elementi pubblicati) e una cache locale di 10 minuti (usa `--no-cache` se serve un dato certamente fresco, es. subito dopo una pubblicazione). Stampa un array JSON su stdout.
 2. Se non specificato dall'utente, chiedere quale tipo di contenuto analizzare (`faq`, `posts`, `pages`).
-3. Per le FAQ, il testo della risposta arriva già estratto nel campo `contenuto_testo` (letto dal campo ACF `risposta_faq` del sito).
+3. Per le FAQ, il testo della risposta arriva già estratto in `contenuto_testo` (dal campo ACF `risposta_faq`).
+4. Ogni elemento include già, senza chiamate aggiuntive: `meta_title`, `meta_description` (i meta tag SEO reali), `schema_types` (elenco dei tipi `@type` presenti nello schema JSON-LD del sito), e per le FAQ `schema_faq_question_count` (quante domande sono effettivamente popolate nello schema FAQPage).
 
-### Fase 2 — Mappa dei link interni (facoltativa, solo se rilevante per l'analisi)
+### Fase 2 — Segnali di sessione (una tantum, non per elemento)
 
-4. Recuperare `https://poweritlucegas.it/sitemap_index.xml` e, se utile, `page-sitemap.xml` / `faq-sitemap.xml` via WebFetch per avere destinazioni plausibili di link building.
-5. Escludere sempre pagine LP (`/lp/...`), di ringraziamento (`/grazie/...`) o di sistema.
+5. Eseguire **una sola volta per l'intero audit** `node ${CLAUDE_PLUGIN_ROOT}/scripts/fetch-content.js llms-check` per verificare presenza/freschezza di `llms.txt`. Il risultato va riportato **una sola volta nel report finale**, mai ripetuto per ogni elemento, e sempre come nota informativa a bassa priorità — Google ha dichiarato che `llms.txt` non influenza di per sé le citazioni AI (paragonabile al vecchio meta-tag keywords), quindi non è mai un problema critico, solo un segnale emergente da tenere d'occhio.
+6. Se rilevante, recuperare `https://poweritlucegas.it/sitemap_index.xml` (ed eventualmente `page-sitemap.xml` / `faq-sitemap.xml`) via WebFetch per la mappa di link interni e per valutare l'architettura a topic cluster (vedi Fase 3). Escludere sempre pagine LP (`/lp/...`), di ringraziamento (`/grazie/...`) o di sistema.
 
 ### Fase 3 — Analisi di ogni contenuto
 
@@ -44,17 +57,41 @@ Per ciascun elemento valutare:
 **SEO & Keyword**
 - Topic principale e keyword implicite già presenti
 - 3-5 keyword primarie e 3-5 secondarie/LSI suggerite
-- La keyword principale è nel titolo?
+- La keyword principale è nel titolo e nel `meta_title`?
 
-**AEO — AI answer readiness**
+**Schema markup** (fattore critico 2026, non più "nice to have")
+- Usare `schema_types` e, per le FAQ, `schema_faq_question_count`.
+- FAQ: atteso `FAQPage` nel grafo. Se `schema_faq_question_count` è 0 pur avendo `FAQPage` in `schema_types`, segnalare "schema FAQPage presente ma vuoto" — problema più subdolo di un'assenza totale, va distinto esplicitamente.
+- Articoli: atteso `Article`; considerare positivamente anche `BreadcrumbList`/`Organization`/`WebSite` come segnali di entità.
+- Se `schema_types` è vuoto per un item, segnalarlo come **"non verificabile"**, mai come "schema assente" — evita falsi positivi quando manca solo il dato, non lo schema reale.
+
+**Meta tag**
+- `meta_title`/`meta_description` assenti o vuoti
+- `meta_description` troppo corta (<70 caratteri) o troppo lunga (>160)
+- Duplicazioni tra elementi diversi analizzati nella stessa run (confronto diretto in memoria tra i risultati recuperati, nessuna chiamata aggiuntiva)
+
+**AEO — risposta diretta**
 - Risponde a una domanda esplicita? (essenziale per le FAQ)
-- La risposta diretta è nella prima riga (formato snippet)?
+- Le prime 150-200 parole rispondono in modo completo e autonomo alla domanda principale (struttura "TL;DR-first")?
+- È presente, vicino all'inizio, un blocco di risposta diretta di circa 40-60 parole facilmente estraibile? È lo standard 2026 per l'estrazione da parte dei motori di risposta.
 - Ci sono dati numerici, date o fatti verificabili citabili?
 
-**Content quality**
+**GEO — citabilità per i motori generativi**
+- Presenza di citazioni/quote da fonti autorevoli (dato misurato: aumentano di circa il 41% la probabilità di essere citati in una risposta AI)
+- Presenza di statistiche/dati numerici concreti (+31% circa)
+- Presenza di riferimenti a fonti esterne/citazioni (+28% circa)
+- Consistenza del naming del brand nel testo (es. "Power.it" usato in modo coerente, senza varianti incoerenti)
+
+**Architettura per entità e topic cluster**
+- Il contenuto fa parte di un cluster coerente (pagina pillar + articoli/FAQ satellite) con internal linking che descrive relazioni esplicite, o è isolato?
+- Il contenuto è una "unità autosufficiente", comprensibile anche estratto dal contesto della pagina (rilevante perché i motori AI estraggono frammenti, non intere pagine)?
+- Negli articoli lunghi, sono presenti blocchi domanda-risposta nativi (sotto-domande in grassetto o H3 con risposta immediata), non solo nelle FAQ dedicate?
+- I paragrafi sono monotematici (un concetto per paragrafo) o misti/confusi?
+
+**Content quality & freschezza**
 - Lunghezza adeguata (FAQ: 80-200 parole, articoli/pagine: 300+ parole)
 - Sezioni obsolete (prezzi vecchi, normative superate, riferimenti datati)
-- Presenza di struttura (heading, elenchi) o blocco unico
+- Freschezza: confrontare `ultima_modifica` con la data odierna — segnalare "da rivedere" oltre 90 giorni, priorità alta oltre 180 giorni (revisione trimestrale raccomandata)
 
 **Link building interno**
 - Keyword nel testo che corrispondono a pagine/FAQ del sito
@@ -63,8 +100,8 @@ Per ciascun elemento valutare:
 
 ### Fase 4 — Output
 
-6. Presentare i risultati **direttamente nella risposta**: tabella prioritizzata (alta/media/bassa) con i problemi rilevati e le azioni suggerite. Non esiste qui un flusso di approvazione/pubblicazione (quello richiede lo strumento riservato al proprietario del sito) — l'output di questa skill è solo analisi.
-7. Solo se l'utente lo chiede esplicitamente, salvare anche un file markdown con il report nella cartella corrente.
+7. Presentare i risultati **direttamente nella risposta**: tabella prioritizzata (alta/media/bassa) con i problemi rilevati, **etichettati per asse** (SEO / AEO / GEO / schema / meta tag) e le azioni suggerite. Includere la nota su `llms.txt` una sola volta, in coda, come informazione a bassa priorità. Non esiste qui un flusso di approvazione/pubblicazione — l'output di questa skill è solo analisi.
+8. Solo se l'utente lo chiede esplicitamente, salvare anche un file markdown con il report nella cartella corrente.
 
 ## Examples
 
@@ -72,17 +109,20 @@ Per ciascun elemento valutare:
 ```
 /audit-powerit faq
 ```
-Recupera tutte le FAQ pubblicate (con paginazione automatica), le analizza, propone un report prioritizzato.
+Recupera tutte le FAQ pubblicate (con paginazione e cache automatiche), le analizza su SEO/schema/meta/AEO/GEO, propone un report prioritizzato.
 
 ### Esempio 2 — Audit articoli con filtro
 ```
 /audit-powerit posts bolletta
 ```
-Recupera gli articoli che contengono "bolletta" nel titolo/contenuto e ne analizza la qualità SEO/AEO.
+Recupera gli articoli che contengono "bolletta" e ne analizza la qualità SEO/schema/AEO/GEO.
 
 ## Gotchas
 
 - **Solo contenuti pubblicati**: bozze e contenuti privati non sono raggiungibili senza credenziali — comportamento atteso, non un errore.
+- **`yoast_head_json` assente su un item**: non è un errore, semplicemente quell'item non ha dati Yoast — trattare schema/meta come "non verificabili", non come "assenti".
+- **Cache locale**: risultati cachati per 10 minuti (temp dir di sistema, solo dati già pubblici). Usa `--no-cache` per forzare un fetch fresco, utile subito dopo una pubblicazione.
+- **`llms-check` è uno pseudo-tipo interno**, da eseguire una volta per sessione di audit, non un tipo di contenuto da esporre come opzione principale all'utente.
 - **Rate limiting**: lo script inserisce già una pausa tra le pagine; evitare comunque lanci ripetuti ravvicinati sullo stesso tipo di contenuto.
 - **404 su un tipo di contenuto**: il custom post type potrebbe non avere `show_in_rest` attivo. Verificare su `https://poweritlucegas.it/wp-json/wp/v2/types`.
 - **Nessuna pubblicazione possibile**: se l'utente chiede di applicare le modifiche proposte, spiegare che questa skill è di sola analisi e che la pubblicazione è riservata al proprietario del sito.
