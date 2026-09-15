@@ -101,7 +101,19 @@ Per ciascun elemento valutare:
 
 ### Fase 4 — Output
 
-7. Presentare i risultati **direttamente nella risposta**: tabella prioritizzata (alta/media/bassa) con i problemi rilevati, **etichettati per asse** (SEO / AEO / GEO / schema / meta tag) e le azioni suggerite. Includere la nota su `llms.txt` una sola volta, in coda, come informazione a bassa priorità. Non esiste qui un flusso di approvazione/pubblicazione — l'output di questa skill è solo analisi.
+7. Presentare i risultati **direttamente nella risposta**, seguendo questo formato standard (adattivo: includere solo le sezioni/tabelle pertinenti alla richiesta specifica, non applicarle meccanicamente tutte a ogni report — un audit mirato su un solo articolo non ha bisogno di tabelle di cluster/grafo-link):
+
+   - **Frase introduttiva**: cosa è stato analizzato (tipo, quanti elementi, eventuale filtro), con link cliccabile se ci si concentra su un singolo elemento o pochi elementi nominati.
+   - **Tabella "Elementi analizzati"** (quando l'analisi copre più di un contenuto): colonne minime `Articolo`/`FAQ` (sempre **link markdown cliccabile** al suo URL reale, mai testo semplice) | `Pubblicato` | `Parole`.
+   - **Tabelle di supporto**, solo se la richiesta le rende pertinenti:
+     - mappa cluster tematici: `Cluster` | `Articoli` | `Parole tot.` | `Coesione interna`
+     - grafo di link interni: `Articolo` (linkato) | `In` | `Out` | `Nota`
+   - **Tabella principale "Criticità prioritizzate"**: colonne minime `Priorità` | `Problema` | `Dettaglio`. Aggiungere `Asse` (SEO/AEO/GEO/Schema/Meta) quando il report copre più discipline insieme; aggiungere `Dove` e `Azione` quando più elementi richiedono interventi puntuali distinti.
+   - **Grassetto** per numeri, percentuali e giudizi sintetici chiave dentro le celle (es. "**Isolato totale**", "**50% degli articoli orfani**"), non testo piatto.
+   - **Link markdown cliccabili** ovunque si nomini un articolo/FAQ specifico, in tabella e nel testo.
+   - **Sintesi di chiusura** (1-2 frasi, con il dato più rilevante in **grassetto**) quando l'insieme analizzato è abbastanza ampio da avere un pattern trasversale da segnalare — non forzarla su un singolo elemento isolato.
+
+   Includere la nota su `llms.txt` una sola volta, in coda, come informazione a bassa priorità. Non esiste qui un flusso di approvazione/pubblicazione — l'output di questa skill è solo analisi.
 8. Solo se l'utente lo chiede esplicitamente, salvare anche un file markdown con il report nella cartella corrente.
 
 ## Examples
