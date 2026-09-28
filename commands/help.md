@@ -34,7 +34,18 @@ Non serve alcuna configurazione: nessuna password, nessun URL da inserire, funzi
 
 ## Cosa restituisce l'audit
 
-Per ogni contenuto analizzato: valutazione SEO (keyword con dati Semrush reali quando disponibili, titolo, meta tag), verifica fattuale delle fonti citate (asse "Accuratezza": un'affermazione non riscontrata nella fonte linkata è sempre priorità alta), schema markup (dati strutturati presenti/mancanti/incompleti), valutazione AEO (risposta diretta, dati citabili), valutazione GEO (citazioni, statistiche, consistenza del brand), qualità/lunghezza/freschezza del contenuto, suggerimenti di link interno in uscita verso altre pagine/FAQ del sito e controllo dei link in entrata (un contenuto recente senza alcun link in entrata da articoli o FAQ viene segnalato). Include anche una nota (una sola volta per report, non per contenuto) sullo stato del file `llms.txt` del sito, trattata come informazione a bassa priorità. Il risultato finale è una tabella prioritizzata (alta/media/bassa priorità) presentata direttamente in chat, con ogni problema etichettato per asse (SEO/AEO/GEO/Schema/Meta/Accuratezza) e con i titoli di articoli e FAQ sempre come link cliccabili.
+Il report ha sempre la stessa struttura, con sezioni fisse nello stesso ordine:
+
+1. **Opportunità di ricerca** — keyword, volume e difficoltà (dati Semrush reali quando disponibili) e chi presidia la SERP.
+2. **Posizione nel cluster** — se il contenuto è pillar, satellite o isolato, chi lo collega (link in entrata da articoli e FAQ) e quale è il pillar di riferimento.
+3. **Cosa funziona già** — i punti di forza verificati.
+4. **Miglioramenti in ordine di priorità** — tabella alta/media/bassa, con ogni problema etichettato per asse (SEO, AEO/AIO, GEO, Schema, Meta, Accuratezza, Link interni, Contenuto, Freschezza). Include la verifica delle fonti citate: un'affermazione non riscontrata nella fonte linkata è sempre priorità alta.
+5. **Blocco di apertura proposto** — circa 40-60 parole di risposta diretta da mettere in cima.
+6. **FAQ suggerite per lo schema** — le domande da coprire con FAQPage.
+
+Il report può avere una sezione in più, "Approfondimento specifico", quando chiedi di concentrarti su un tema. Se chiedi di guardare un solo asse (es. "solo AIO") le sezioni restano tutte e quell'asse passa per primo. Con più di 3 contenuti il report diventa una panoramica in tabella, con il report completo per quelli che scegli. Una nota sul file `llms.txt` compare una sola volta, a bassa priorità. I titoli di articoli e FAQ sono sempre link cliccabili.
+
+Su richiesta esplicita ci sono altri due output: l'**analisi dell'architettura del blog** (mappa dei cluster, grafo dei link, criticità) e, dopo un'analisi, la **versione riscritta** del contenuto pronta da incollare in WordPress, con `[inserire dato verificato]` dove un dato non è confermato e le note per chi pubblica.
 
 **Cosa NON copre**: velocità del sito, Core Web Vitals, aspetti tecnici infrastrutturali — coperti da un altro strumento dedicato, non da questo plugin.
 
