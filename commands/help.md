@@ -8,7 +8,7 @@ Rispondi all'utente spiegando in modo chiaro e discorsivo (non solo un elenco se
 
 ## Cosa fa questo plugin
 
-**power-wp-audit** analizza i contenuti pubblicati su **poweritlucegas.it** (FAQ e articoli/post) su tre assi distinti: **SEO** (farsi trovare e posizionare), **AEO** (farsi estrarre come risposta diretta — featured snippet, AI Overviews di Google incluse) e **GEO** (farsi citare come fonte dai motori generativi come ChatGPT o Perplexity). Controlla anche schema markup (dati strutturati JSON-LD), meta title/description, e la freschezza dei contenuti. Recupera i contenuti via API REST pubblica di WordPress e propone un report con problemi rilevati e azioni suggerite, etichettate per asse.
+**power-wp-audit** analizza i contenuti pubblicati su **poweritlucegas.it** (FAQ e articoli/post) su tre assi distinti: **SEO** (farsi trovare e posizionare), **AEO** (farsi estrarre come risposta diretta — featured snippet, AI Overviews di Google incluse) e **GEO** (farsi citare come fonte dai motori generativi come ChatGPT o Perplexity). Controlla anche schema markup (dati strutturati JSON-LD), meta title/description, la freschezza dei contenuti, l'**accuratezza delle fonti citate** (confronta le affermazioni con la pagina ARERA o dell'ente linkato) e i **link interni in entrata**, cioè da quali articoli e FAQ arrivano collegamenti a ciascun contenuto. Recupera i contenuti via API REST pubblica di WordPress e propone un report con problemi rilevati e azioni suggerite, etichettate per asse.
 
 ## Cosa NON fa (importante)
 
@@ -30,9 +30,11 @@ Comando principale (skill di audit):
 
 Non serve alcuna configurazione: nessuna password, nessun URL da inserire, funziona subito dopo l'installazione.
 
+**Semrush (facoltativo)**: se nella sessione è collegato Semrush, l'audit usa dati reali di volume, CPC, keyword difficulty e SERP per le keyword di ogni contenuto. Se non è collegato, l'audit funziona comunque e lo dichiara esplicitamente nel report ("dati di volume non disponibili in questa sessione"), senza mai stimare numeri a memoria.
+
 ## Cosa restituisce l'audit
 
-Per ogni contenuto analizzato: valutazione SEO (keyword, titolo, meta tag), schema markup (dati strutturati presenti/mancanti/incompleti), valutazione AEO (risposta diretta, dati citabili), valutazione GEO (citazioni, statistiche, consistenza del brand), qualità/lunghezza/freschezza del contenuto, ed eventuali suggerimenti di link interno verso altre pagine/FAQ del sito. Include anche una nota (una sola volta per report, non per contenuto) sullo stato del file `llms.txt` del sito, trattata come informazione a bassa priorità. Il risultato finale è una tabella prioritizzata (alta/media/bassa priorità) presentata direttamente in chat, con ogni problema etichettato per asse (SEO/AEO/GEO).
+Per ogni contenuto analizzato: valutazione SEO (keyword con dati Semrush reali quando disponibili, titolo, meta tag), verifica fattuale delle fonti citate (asse "Accuratezza": un'affermazione non riscontrata nella fonte linkata è sempre priorità alta), schema markup (dati strutturati presenti/mancanti/incompleti), valutazione AEO (risposta diretta, dati citabili), valutazione GEO (citazioni, statistiche, consistenza del brand), qualità/lunghezza/freschezza del contenuto, suggerimenti di link interno in uscita verso altre pagine/FAQ del sito e controllo dei link in entrata (un contenuto recente senza alcun link in entrata da articoli o FAQ viene segnalato). Include anche una nota (una sola volta per report, non per contenuto) sullo stato del file `llms.txt` del sito, trattata come informazione a bassa priorità. Il risultato finale è una tabella prioritizzata (alta/media/bassa priorità) presentata direttamente in chat, con ogni problema etichettato per asse (SEO/AEO/GEO/Schema/Meta/Accuratezza) e con i titoli di articoli e FAQ sempre come link cliccabili.
 
 **Cosa NON copre**: velocità del sito, Core Web Vitals, aspetti tecnici infrastrutturali — coperti da un altro strumento dedicato, non da questo plugin.
 
